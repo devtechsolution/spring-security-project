@@ -30,9 +30,11 @@ public class ProjectSecurityConfig {
     SecurityFilterChain defaultSecurityFilterChain(HttpSecurity http) throws Exception {
         /*http.authorizeHttpRequests(requests -> requests.anyRequest().permitAll());*/
         /*http.authorizeHttpRequests(requests -> requests.anyRequest().denyAll()); */
-        http.authorizeHttpRequests((requests) -> requests
+        http
+                .csrf(httpSecurityCsrfConfigurer -> httpSecurityCsrfConfigurer.disable())
+                .authorizeHttpRequests((requests) -> requests
                 .requestMatchers("/myAccount", "/myBalance", "/myCards", "/myLoans").authenticated()
-                .requestMatchers("/notices", "/contact", "/error").permitAll());
+                .requestMatchers("/notices", "/contact", "/error", "/register").permitAll());
         /*http.formLogin(withDefaults());
         http.httpBasic(withDefaults());*/
         http.formLogin(AbstractHttpConfigurer::disable);
@@ -41,10 +43,10 @@ public class ProjectSecurityConfig {
         return http.build();
     }
 
-    @Bean
+    /*@Bean
     public UserDetailsService userDetailsService(DataSource dataSource) {
         return new JdbcUserDetailsManager(dataSource);
-    }
+    }*/
 
     @Bean
     public PasswordEncoder passwordEncoder() {
